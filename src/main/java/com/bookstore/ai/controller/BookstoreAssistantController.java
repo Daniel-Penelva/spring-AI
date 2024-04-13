@@ -56,4 +56,12 @@ public class BookstoreAssistantController {
         return chatClient.stream(message);
     }
 
+    // http://localhost:8080/bookstore/chat2/stream/informations
+    // http://localhost:8080/bookstore/chat2/stream/informations?message=Qual a biografia de Charles Duhigg?
+    @GetMapping("/chat2/stream/informations")
+    public Flux<ChatResponse> bookstoreChatStreamEx2(@RequestParam(value = "message",
+            defaultValue = "Quais são os livros best sellers dos ultimos anos?") String message){
+        return chatClient.stream(new Prompt(message));
+    }
+
 }
