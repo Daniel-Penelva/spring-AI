@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import reactor.core.publisher.Flux;
 
 @RestController
 @RequestMapping("/bookstore")
@@ -20,6 +21,7 @@ public class BookstoreAssistantController {
     }
 
     // http://localhost:8080/bookstore/informations
+    // http://localhost:8080/bookstore/informations?message=Pode falar sobre a classe OpenAiChatClient?
     @GetMapping("/informations")
     public String bookstoreChat(@RequestParam(value = "message", defaultValue = "Faça um resumo sobre Spring AI?") String message){
         return chatClient.call(message);
@@ -44,6 +46,14 @@ public class BookstoreAssistantController {
                 """);
         promptTemplate.add("book", book);
         return this.chatClient.call(promptTemplate.create()).getResult().getOutput().getContent();
+    }
+
+    // http://localhost:8080/bookstore/stream/informations
+    // http://localhost:8080/bookstore/stream/informations?message=Qual a biografia de Charles Duhigg?
+    @GetMapping("/stream/informations")
+    public Flux<String> bookstoreChatStream(@RequestParam(value = "message",
+            defaultValue = "Quais são os livros best sellers dos ultimos anos?") String message){
+        return chatClient.stream(message);
     }
 
 }
